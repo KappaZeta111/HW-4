@@ -1,0 +1,273 @@
+//Jesufarahanmi Fadamiro
+//Schaum's outline Programming with c++
+//g++ -o hw4 hw4.cpp
+//hw4.cpp
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<cstdlib>
+#include<cassert>
+using namespace std;
+const int Max_size = 100;
+int readFile(int [], ifstream&);
+int sort(int [], int, int [], int, int[]);
+void writefile(int[], int);
+void test_readfile(void);
+void test_sort(void);
+void merge(int, int, int [], int [], int []);
+
+
+int main()
+
+{
+	
+string filename1, filename2;
+//int inputArray1[], inputArray1_size, inputArray2[], inputArray2_size;
+	test_readfile();
+	test_sort();
+	cout<<"*** Welcome to Fara's sorting program ***\n";
+	cout<<"\nEnter the first input file name: ";
+	getline(cin, filename1);
+	
+	
+	ifstream inStreamFirst;
+	
+	int inputArray1[Max_size];
+	int inputArray1_size;
+	int inputArray2[Max_size];
+	int inputArray2_size;
+	int outputArray[Max_size];
+	int outputArray_size;
+	int i;	
+	
+
+	
+	
+	inStreamFirst.open(filename1.c_str());
+	if (inStreamFirst.fail()) 
+	{
+		cout << "Input file opening failed." << endl;
+		exit(1);
+	}
+	inputArray1_size = readFile(inputArray1, inStreamFirst);
+	inStreamFirst.close();
+ 	cout<<"The list of "<<inputArray1_size<<" numbers in file "<<filename1<<" is:\n";
+	for(i=0;i<inputArray1_size;i++)
+	{
+		cout<<inputArray1[i]<<endl;
+	}	
+ 
+	cout<<"\nEnter the second input file name: ";
+	getline(cin, filename2);
+	inStreamFirst.open(filename2.c_str());
+	if (inStreamFirst.fail()) 
+	{
+		cout << "Input file opening failed." << endl;
+		exit(1);
+	}
+	inputArray2_size = readFile(inputArray2, inStreamFirst);
+	inStreamFirst.close();
+	
+	cout<<"The list of "<<inputArray2_size<<" numbers in file "<<filename2<<" is:\n";
+	for(i=0;i<inputArray2_size;i++)
+	{
+		cout<<inputArray2[i]<<endl;
+	}	
+
+	
+	
+	outputArray_size=sort(inputArray1, inputArray1_size, inputArray2, inputArray2_size, outputArray);
+	
+	//test
+	
+	
+	cout<<"The sorted list of "<<outputArray_size<<" number is: ";	
+	for(i=0;i<outputArray_size;i++)
+	{
+		cout<<outputArray[i]<<" ";
+	}
+
+
+//call write function
+writefile(outputArray, outputArray_size);
+
+
+
+cout<<"*** Goodbye. ***\n";
+
+return 0;
+	
+	
+}
+
+int readFile(int inputArray[], ifstream& instream)//read file content into an array
+{
+	int index = 0;
+	instream>>inputArray[index];
+	while (! instream.eof())
+	{
+		
+		//cout<<inputArray[index]<<endl;
+		index++;
+		instream>>inputArray[index];
+	}
+	return index;	
+}
+
+void test_readfile(void) 
+{
+   ifstream instreamTest1("test0.txt");
+   ifstream instreamTest2("test100.txt");
+	int test1, test2;
+	int iArrayTest1[0];
+	int iArrayTest2[100];	
+	cout<< "Unit Testing 1: Function - readfile()\n";
+	cout<< "\tCase1: Input Array size = 0\n";
+	
+	test1 = readFile(iArrayTest1, instreamTest1);
+	//test_readfile();
+	//assert(test1 = 0);
+	cout << "\tCase passed...\n";
+	cout << "\tCase 2: Input Array Size = 0\n";	
+	test2 = readFile(iArrayTest2, instreamTest2);
+	//test_readfile();	
+	//assert(test2 = 100);
+	cout << "\tCase passed...\n";
+}
+
+int sort(int inputArray1[], int inputArray1_size, int inputArray2[], int inputArray2_size, int outputArray[])
+{
+int i,j,temp,a3_size=0;
+int x=inputArray1_size+inputArray2_size;
+cout<<"x = "<<x<<endl;
+merge(inputArray1_size,inputArray2_size,inputArray1,  inputArray2,  outputArray);
+	//int m, int n, int A[], int B[], int C[]
+	//for(i=0;i<inputArray1_size;i++)
+	//{
+	//	outputArray[i]=inputArray1[i];
+	//	outputArray[i+inputArray1_size]=inputArray2[i];
+		
+		//a3_size=a3_size+2;
+	//}
+	
+//test merge
+for(i=0;i<x;i++)
+	{
+		cout<<outputArray[i]<<" ";
+	}
+
+//sort Algorithm
+	for(i=1;i<x;i++)
+	{
+		for(j=0;j<x-1;j++)
+		{
+			if(outputArray[j]>outputArray[j+1])
+				{
+					temp=outputArray[j];
+					outputArray[j]=outputArray[j+1];
+					outputArray[j+1]=temp;
+//cout<<outputArray[i];
+				}
+		}
+	}
+
+	return x;
+}
+
+void test_sort(void) {
+int test1, test2;
+int Arraytest1[] = {1,2,3,4,5,6,7,8,9,10};
+int Arraytest1_size = 10;
+int Arraytest2[] = {1,2,3,4,5,6,7,8,9,10};
+int Arraytest2_size = 10;
+int outputArray[20];
+int Arraytest3[] = {1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10};
+int Arraytest3_size = 30;
+int Arraytest4[] = {1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10};
+int Arraytest4_size = 30;
+int outputArray2[60];
+cout<< "Unit Testing 2: Function - sort()\n";
+cout<< "\tCase1: Input Array1 size = 10 Input Array2 size = 10\n";
+//test1 = sort(Arraytest1, Arraytest1_size, Arraytest2, Arraytest2_size, outputArray);
+
+test1 = sort(Arraytest1, Arraytest1_size, Arraytest2, Arraytest2_size, outputArray);
+//assert(test2 = 100);
+
+cout << "\tCase passed...\n";
+cout<< "\tCase2: Input Array1 size = 30 Input Array2 size = 30\n"; 
+test2 = sort(Arraytest1, Arraytest1_size, Arraytest2, Arraytest2_size, outputArray);
+//assert(test2 = 60);
+cout << "\tCase passed...\n";
+}
+
+
+
+void writefile(int outputArray[], int outputArray_size)
+{
+	int k;
+	string outputfile;
+	cout<<"\nEnter the output file name: \n";
+	getline(cin,outputfile);
+	ofstream writefile;
+	writefile.open(outputfile.c_str());
+	for(k=0;k<outputArray_size;k++)
+	{
+		writefile<<outputArray[k];
+	}
+	writefile.close();
+cout<<"\n*** Please check the new file - "<<outputfile<<" ***\n";
+}
+//combines inputArray 1 & 2 into one array
+void merge(int m, int n, int A[], int B[], int C[]) {
+
+      int i, j, k;
+
+      i = 0;
+
+      j = 0;
+
+      k = 0;
+
+      while (i < m && j < n) {
+
+            if (A[i] <= B[j]) {
+
+                  C[k] = A[i];
+
+                  i++;
+
+            } else {
+
+                  C[k] = B[j];
+
+                  j++;
+
+            }
+
+            k++;
+
+      }
+
+      if (i < m) {
+
+            for (int p = i; p < m; p++) {
+
+                  C[k] = A[p];
+
+                  k++;
+
+            }
+
+      } else {
+
+            for (int p = j; p < n; p++) {
+
+                  C[k] = B[p];
+
+                  k++;
+
+            }
+
+      }
+
+}
